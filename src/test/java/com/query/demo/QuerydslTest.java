@@ -65,28 +65,28 @@ public class QuerydslTest {
     public void startQuerydsl(){
         QMember m = new QMember("m");
 
-        Member findMember = queryFactory
+        Member result = queryFactory
                 .select(m)
                 .from(m)
                 .where(m.username.eq("yoobin"))
                 .fetchOne();
-        Assertions.assertThat(findMember.getUsername()).isEqualTo("yoobin");
+        Assertions.assertThat(result.getUsername()).isEqualTo("yoobin");
     }
 
     @Test
     public void searchQuerydsl(){
         QMember m = new QMember("m");
 
-        Member findMember = queryFactory
+        Member result = queryFactory
                 .selectFrom(m)
                 .where(m.username.eq("yoobin")
                         .and(m.age.eq(31)))
                 .fetchOne();
-        Assertions.assertThat(findMember.getUsername()).isEqualTo("yoobin");
+        Assertions.assertThat(result.getUsername()).isEqualTo("yoobin");
     }
 
     @Test
-    public void sort() {
+    public void sortQuerydsl() {
 
         QMember m = new QMember("m");
 
@@ -103,7 +103,7 @@ public class QuerydslTest {
 
 
     @Test
-    public void pagingDsl() {
+    public void pagingQuerydsl() {
 
         QMember m = new QMember("m");
 
@@ -111,13 +111,13 @@ public class QuerydslTest {
                 .selectFrom(m)
                 .orderBy(m.username.asc())
                 .offset(1)
-                .limit(2)
+                .limit(3)
                 .fetch();
-        Assertions.assertThat(result.size()).isEqualTo(2);
+        Assertions.assertThat(result.size()).isEqualTo(3);
     }
 
     @Test
-    public void queryJoin() throws Exception{
+    public void joinQuerydsl() throws Exception{
         QMember m = new QMember("m");
         QDepartment d = new QDepartment("d");
 
@@ -133,7 +133,7 @@ public class QuerydslTest {
     }
 
     @Test
-    public void groupByHavingTest() {
+    public void groupByHavingQuerydsl() {
 
         QMember m = new QMember("m");
 
@@ -150,7 +150,7 @@ public class QuerydslTest {
     }
 
     @Test
-    public void subqueryTest() {
+    public void subqueryQuerydsl() {
 
         QMember m = new QMember("m");
 
@@ -171,7 +171,7 @@ public class QuerydslTest {
     }
 
     @Test
-    public void subqueryTest2() {
+    public void subqueryQuerydsl2() {
 
         QMember m = new QMember("m");
 
@@ -193,7 +193,7 @@ public class QuerydslTest {
     }
 
     @Test
-    public void constantQuery(){
+    public void constantQuerydsl(){
 
         QMember m = new QMember("m");
 
@@ -208,7 +208,7 @@ public class QuerydslTest {
     }
 
     @Test
-    public void constantQuery2(){
+    public void constantQuerydsl2(){
 
         QMember m = new QMember("m");
 
