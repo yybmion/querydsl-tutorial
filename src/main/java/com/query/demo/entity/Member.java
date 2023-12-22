@@ -19,9 +19,14 @@ public class Member {
     public Member(String username) {
         this.username = username;
     }
-    public Member(String username, int age, String team) {
+    public Member(String username, int age, String team,Department department) {
         this.username = username;
         this.age = age;
         this.team = team;
+        this.department = department;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Department department;
 }

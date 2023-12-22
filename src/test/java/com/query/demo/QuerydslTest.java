@@ -1,6 +1,8 @@
 package com.query.demo;
 
+import com.query.demo.entity.Department;
 import com.query.demo.entity.Member;
+import com.query.demo.entity.QDepartment;
 import com.query.demo.entity.QMember;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -33,17 +35,22 @@ public class QuerydslTest {
 
         queryFactory = new JPAQueryFactory(em);
 
+        Department department1 = new Department("department1");
+        Department department2 = new Department("department2");
+        em.persist(department1);
+        em.persist(department2);
+
         String job1 = "Front Engineering";
         String job2 = "Back Engineering";
-        Member member1 = new Member("yoobin", 31, job1);
-        Member member2 = new Member("jihyun", 22, job1);
-        Member member3 = new Member("musk", 28, job2);
-        Member member4 = new Member("minsu", 35, job2);
+        Member member1 = new Member("yoobin", 31, job1,department1);
+        Member member2 = new Member("jihyun", 22, job1,department1);
+        Member member3 = new Member("musk", 28, job2,department2);
+        Member member4 = new Member("minsu", 35, job2,department2);
         /**
          * member5,6는 groupby, having 예제부터 추가!
          */
-        Member member5 = new Member("uiui", 32, job2);
-        Member member6 = new Member("toobi", 28, job2);
+        Member member5 = new Member("uiui", 32, job2,department1);
+        Member member6 = new Member("toobi", 28, job2,department2);
 
 
         em.persist(member1);
@@ -107,6 +114,22 @@ public class QuerydslTest {
                 .limit(2)
                 .fetch();
         Assertions.assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void queryJoin() throws Exception{
+        QMember m = new QMember("m");
+        QDepartment d = new QDepartment("d");
+
+        List<Member> result = queryFactory
+                .selectFrom(m)
+                .join(m.department, d)
+                .where(d.dName.eq("department1"))
+                .fetch();
+
+        Assertions.assertThat(result)
+                .extracting("username")
+                .containsExactly("yoobin","jihyun","uiui");
     }
 
     @Test
@@ -175,7 +198,7 @@ public class QuerydslTest {
         QMember m = new QMember("m");
 
         List<Tuple> result = queryFactory
-                .select(m.username, Expressions.constant("A"))
+                .select(m.username, Expressions.constant("CALL"))
                 .from(m)
                 .fetch();
 
